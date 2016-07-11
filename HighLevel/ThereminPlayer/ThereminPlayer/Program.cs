@@ -16,7 +16,7 @@ namespace ThereminPlayer
         [STAThread]
         static void Main()
         {
-            string fileName = "Ahhh.wav";
+            string fileName = "ShortAhhh.wav";
             string path = Path.Combine(Environment.CurrentDirectory, @"Wavs\", fileName);
 
             float ctr = 1.1f;
