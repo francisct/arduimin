@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,21 +24,17 @@ namespace ThereminPlayer
 
             
 
-            string fileName = "ShortAhhh.wav";
-            string wavLocation = Path.Combine(Environment.CurrentDirectory, @"Wavs\", fileName);
+            string fileName = @"Wavs\LongAhhh.wav";
 
-            ArduinoInputReceiver receiver = new ArduinoInputReceiver(wavLocation);
+            Wav wav = new Wav(fileName);
+            wav.Play();
+
+            ArduinoInputReceiver receiver = new ArduinoInputReceiver(ref wav);
             receiver.Open();
-            /*while (true)
-            {
-                Wav wav = new Wav(wavLocation);
-                wav.Reset();
-                wav.ApplyPitchShifting(2f);
-                wav.BackupWaveData();
-                wav.SaveModifiedWavData();
-                wav.Play();
-            }*/
-            
+
+
+
+
         }
     }
 }

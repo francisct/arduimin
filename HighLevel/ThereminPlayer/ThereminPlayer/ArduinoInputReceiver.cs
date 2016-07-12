@@ -16,34 +16,18 @@ namespace ThereminPlayer
 
         public SerialPort _serialPort;
         private int _baudRate;
-        private int _dataBits;
-        private Handshake _handshake;
-        private Parity _parity;
         private string _portName;
-        private StopBits _stopBits;
-        private string wavLocation;
-
-        /// <summary> 
-        /// Holds data received until we get a terminator. 
-        /// </summary> 
+        private Wav wav;
+        
         private string tString;
-        /// <summary> 
-        /// End of transmition byte in this case EOT (ASCII 4). 
-        /// </summary> 
-        private byte _terminator;
 
-        public ArduinoInputReceiver(string wav)
+        public ArduinoInputReceiver(ref Wav wav)
         {
-            this.wavLocation = wav;
+            this.wav = wav;
             _serialPort = new SerialPort();
             _baudRate = 9600;
-            _dataBits = 8;
-            _handshake = Handshake.None;
-            _parity = Parity.None;
             _portName = "COM5";
-            _stopBits = StopBits.One;
             tString = string.Empty;
-            _terminator = 0x4;
         }
 
         public void Open()
@@ -66,15 +50,10 @@ namespace ThereminPlayer
             tString += Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
             string myString = (tString.Length > 3) ? tString.Substring(tString.Length - 4, 4) : tString;
-            //We add + 1 because the library PitchShifter is from 1 to 2
-            float shiftPitch = float.Parse(myString) + 1.0f;
 
-            Wav wav = new Wav(wavLocation);
-            wav.Reset();
+            float shiftPitch = float.Parse(myString);
+            
             wav.ApplyPitchShifting(shiftPitch);
-            wav.BackupWaveData();
-            wav.SaveModifiedWavData();
-            wav.Play();
         }
     }
 }
