@@ -18,6 +18,7 @@ namespace ThereminPlayer
         private int _baudRate;
         private string _portName;
         private Wav wav;
+        public bool open;
         
         private string tString;
 
@@ -28,6 +29,7 @@ namespace ThereminPlayer
             _baudRate = 9600;
             _portName = "COM5";
             tString = string.Empty;
+            open = false;
         }
 
         public void Open()
@@ -35,6 +37,13 @@ namespace ThereminPlayer
             _serialPort = new SerialPort(_portName, _baudRate);
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(_serialPort_DataReceived);
             _serialPort.Open();
+            open = true;
+        }
+
+        public void Stop()
+        {
+            _serialPort.Close();
+            open = false;
         }
 
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -50,10 +59,15 @@ namespace ThereminPlayer
             tString += Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
             string myString = (tString.Length > 3) ? tString.Substring(tString.Length - 4, 4) : tString;
+            try
+            {
+                float shiftPitch = float.Parse(myString);
+                wav.ApplyPitchShifting(shiftPitch);
+            }
+            catch(Exception ex)
+            {
 
-            float shiftPitch = float.Parse(myString);
-            
-            wav.ApplyPitchShifting(shiftPitch);
+            }
         }
     }
 }
