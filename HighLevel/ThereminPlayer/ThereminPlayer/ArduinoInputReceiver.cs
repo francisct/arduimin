@@ -14,7 +14,7 @@ namespace ThereminPlayer
     class ArduinoInputReceiver
     {
 
-        private SerialPort _serialPort;
+        public SerialPort _serialPort;
         private int _baudRate;
         private int _dataBits;
         private Handshake _handshake;
@@ -40,43 +40,17 @@ namespace ThereminPlayer
             _dataBits = 8;
             _handshake = Handshake.None;
             _parity = Parity.None;
-            _portName = "COM1";
+            _portName = "COM5";
             _stopBits = StopBits.One;
             tString = string.Empty;
             _terminator = 0x4;
         }
 
-        public void Open2()
+        public void Open()
         {
-            _serialPort = new SerialPort("COM4", 9600);
+            _serialPort = new SerialPort(_portName, _baudRate);
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(_serialPort_DataReceived);
             _serialPort.Open();
-            while (true)
-            {
-                String s = Console.ReadLine();
-                if (s.Equals("exit"))
-                {
-                    break;
-                }
-                _serialPort.Write(s + '\n');
-            }
-            _serialPort.Close();
-        }
-
-        public bool Open()
-        {
-            try
-            {
-                _serialPort.BaudRate = _baudRate;
-                _serialPort.DataBits = _dataBits;
-                _serialPort.Handshake = _handshake;
-                _serialPort.Parity = _parity;
-                _serialPort.PortName = _portName;
-                _serialPort.StopBits = _stopBits;
-                _serialPort.DataReceived += new SerialDataReceivedEventHandler(_serialPort_DataReceived);
-            }
-            catch { return false; }
-            return true;
         }
 
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -90,22 +64,15 @@ namespace ThereminPlayer
 
             //For the example assume the data we are received is ASCII data. 
             tString += Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            //Check if string contains the terminator  
-            if (tString.IndexOf((char)_terminator) > -1)
-            {
-                //If tString does contain terminator we cannot assume that it is the last character received 
-                string workingString = tString.Substring(0, tString.IndexOf((char)_terminator));
-                //Remove the data up to the terminator from tString 
-                tString = tString.Substring(tString.IndexOf((char)_terminator));
-                //Do something with workingString 
-                Console.WriteLine(workingString);
 
-
-                wav.ApplyPitchShifting(2f);
+            string myString = (tString.Length > 3) ? tString.Substring(tString.Length - 4, 4) : tString;
+            //We add + 1 because the library PitchShifter is from 1 to 2
+            float shiftPitch = float.Parse(myString) + 1.0f;
+            wav.Reset();
+                wav.ApplyPitchShifting(shiftPitch);
                 wav.BackupWaveData();
                 wav.SaveModifiedWavData();
                 wav.Play();
-            }
         }
     }
 }

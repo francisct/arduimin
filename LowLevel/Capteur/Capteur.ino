@@ -35,11 +35,8 @@ if (distance >= 30)
     {
       distance = 1;
     }
-if (distance <=10)
-    {
-      distance =0;
-    }
 
+Serial.flush();
 Serial.print(distance/30);
 
      
