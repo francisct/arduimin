@@ -21,7 +21,7 @@ namespace ThereminPlayer
         private Parity _parity;
         private string _portName;
         private StopBits _stopBits;
-        private Wav wav;
+        private string wavLocation;
 
         /// <summary> 
         /// Holds data received until we get a terminator. 
@@ -32,9 +32,9 @@ namespace ThereminPlayer
         /// </summary> 
         private byte _terminator;
 
-        public ArduinoInputReceiver(Wav wav)
+        public ArduinoInputReceiver(string wav)
         {
-            this.wav = wav;
+            this.wavLocation = wav;
             _serialPort = new SerialPort();
             _baudRate = 9600;
             _dataBits = 8;
@@ -68,11 +68,13 @@ namespace ThereminPlayer
             string myString = (tString.Length > 3) ? tString.Substring(tString.Length - 4, 4) : tString;
             //We add + 1 because the library PitchShifter is from 1 to 2
             float shiftPitch = float.Parse(myString) + 1.0f;
+
+            Wav wav = new Wav(wavLocation);
             wav.Reset();
-                wav.ApplyPitchShifting(shiftPitch);
-                wav.BackupWaveData();
-                wav.SaveModifiedWavData();
-                wav.Play();
+            wav.ApplyPitchShifting(shiftPitch);
+            wav.BackupWaveData();
+            wav.SaveModifiedWavData();
+            wav.Play();
         }
     }
 }
