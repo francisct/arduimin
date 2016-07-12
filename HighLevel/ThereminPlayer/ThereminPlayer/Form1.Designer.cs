@@ -39,7 +39,7 @@
             this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Location = new System.Drawing.Point(32, 28);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(221, 23);
+            this.button1.Size = new System.Drawing.Size(335, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "DROP THE MOTHERFUCKING BASE";
             this.button1.UseVisualStyleBackColor = false;
@@ -50,7 +50,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(284, 79);
+            this.ClientSize = new System.Drawing.Size(395, 81);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Form1";

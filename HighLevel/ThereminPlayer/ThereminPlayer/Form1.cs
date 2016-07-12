@@ -24,10 +24,19 @@ namespace ThereminPlayer
             
 
             string fileName = "ShortAhhh.wav";
-            string wav = Path.Combine(Environment.CurrentDirectory, @"Wavs\", fileName);
+            string wavLocation = Path.Combine(Environment.CurrentDirectory, @"Wavs\", fileName);
 
-            ArduinoInputReceiver receiver = new ArduinoInputReceiver(wav);
-            receiver.Open();
+           // ArduinoInputReceiver receiver = new ArduinoInputReceiver(wavLocation);
+            //receiver.Open();
+            while (true)
+            {
+                Wav wav = new Wav(wavLocation);
+                wav.Reset();
+                wav.ApplyPitchShifting(2f);
+                wav.BackupWaveData();
+                wav.SaveModifiedWavData();
+                wav.Play();
+            }
             
         }
     }
