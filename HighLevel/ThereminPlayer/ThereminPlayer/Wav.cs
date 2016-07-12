@@ -8,7 +8,6 @@ using System.IO;
 using System.Media;
 using NAudio.Wave;
 using System.Threading;
-using FireAndForgetAudioSample;
 
 namespace ThereminPlayer
 {
@@ -46,7 +45,7 @@ namespace ThereminPlayer
 
         public void Play()
         {
-            /*using (var wfr = new WaveFileReader(modifiedWavFile))
+            using (var wfr = new WaveFileReader(modifiedWavFile))
             using (WaveChannel32 wc = new WaveChannel32(wfr) { PadWithZeroes = false })
             using (var audioOutput = new DirectSoundOut())
             {
@@ -60,12 +59,8 @@ namespace ThereminPlayer
                 }
 
                 audioOutput.Stop();
-            }*/
-            var syncTask = new Task(() => {
-                AudioPlaybackEngine engine = new AudioPlaybackEngine();
-                engine.PlaySound(modifiedWavFile);
-            });
-            syncTask.RunSynchronously();
+            }
+                
             
         }
 
