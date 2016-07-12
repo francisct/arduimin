@@ -32,14 +32,16 @@ namespace ThereminPlayer
 
         public Wav(string wavFile)
         {
+            this.wavFile = wavFile;
+        }
+
+        public void Reset()
+        {
             if (File.Exists(wavFile))
             {
-                this.wavFile = wavFile;
                 GetWaveData(wavFile, out waveheader, out wavedata, out sampleRate, out in_data_l, out in_data_r);
             }
         }
-
-
 
         public void Play()
         {
