@@ -8,6 +8,7 @@ using System.IO;
 using System.Media;
 using NAudio.Wave;
 using System.Threading;
+using FireAndForgetAudioSample;
 
 namespace ThereminPlayer
 {
@@ -45,13 +46,13 @@ namespace ThereminPlayer
 
         public void Play()
         {
-            using (var wfr = new WaveFileReader(modifiedWavFile))
+            /*using (var wfr = new WaveFileReader(modifiedWavFile))
             using (WaveChannel32 wc = new WaveChannel32(wfr) { PadWithZeroes = false })
             using (var audioOutput = new DirectSoundOut())
             {
                 audioOutput.Init(wc);
 
-                audioOutput.Play();
+               audioOutput.Play();
 
                 while (audioOutput.PlaybackState != PlaybackState.Stopped)
                 {
@@ -59,7 +60,13 @@ namespace ThereminPlayer
                 }
 
                 audioOutput.Stop();
-            }
+            }*/
+            var syncTask = new Task(() => {
+                AudioPlaybackEngine engine = new AudioPlaybackEngine();
+                engine.PlaySound(modifiedWavFile);
+            });
+            syncTask.RunSynchronously();
+            
         }
 
         public void ApplyPitchShifting(float pitchShift)
@@ -99,15 +106,23 @@ namespace ThereminPlayer
             string fileName = "out.wav";
             modifiedWavFile = Path.Combine(Environment.CurrentDirectory, @"Wavs\", fileName);
 
+            
             string targetFilePath = modifiedWavFile;
             if (File.Exists(targetFilePath))
-                File.Delete(targetFilePath);
+                try
+                { File.Delete(targetFilePath);
+                    using (BinaryWriter writer = new BinaryWriter(File.OpenWrite(targetFilePath)))
+                    {
+                        writer.Write(waveheader);
+                        writer.Write(wavedata);
+                    }
+                }
+                catch(Exception e)
+                {
 
-            using (BinaryWriter writer = new BinaryWriter(File.OpenWrite(targetFilePath)))
-            {
-                writer.Write(waveheader);
-                writer.Write(wavedata);
-            }
+                }
+
+            
         }
 
         // Returns left and right float arrays. 'right' will be null if sound is mono.

@@ -53,6 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArduinoInputReceiver.cs" />
+    <Compile Include="PlaybackEngine\AudioPlaybackEngine.cs" />
+    <Compile Include="PlaybackEngine\AutoDisposeFileReader.cs" />
+    <Compile Include="PlaybackEngine\CachedSound.cs" />
+    <Compile Include="PlaybackEngine\CachedSoundSampleProvider.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
